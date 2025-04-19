@@ -1,4 +1,4 @@
-import { relations, sql } from "drizzle-orm";
+import { relations } from "drizzle-orm";
 import { index, pgTableCreator, primaryKey } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
 
@@ -21,7 +21,7 @@ export const posts = createTable(
       .references(() => users.id),
     createdAt: d
       .timestamp({ withTimezone: true })
-      .default(sql`CURRENT_TIMESTAMP`)
+      .default(new Date())
       .notNull(),
     updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
   }),
@@ -44,8 +44,9 @@ export const users = createTable("user", (d) => ({
       mode: "date",
       withTimezone: true,
     })
-    .default(sql`CURRENT_TIMESTAMP`),
+    .default(new Date()),
   image: d.varchar({ length: 255 }),
+  isAdmin: d.boolean().default(false),
 }));
 
 export const usersRelations = relations(users, ({ many }) => ({
