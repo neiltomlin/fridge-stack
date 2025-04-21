@@ -31,6 +31,19 @@ export const posts = createTable(
   ],
 );
 
+export const contents = createTable("content", (d) => ({
+  id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
+  name: d.varchar({ length: 256 }),
+  category: d.varchar({ length: 256 }),
+  addedById: d
+    .varchar({ length: 255 })
+    .notNull()
+    .references(() => users.id),
+  addedAt: d.timestamp({ withTimezone: true }).default(new Date()).notNull(),
+  updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
+  expiryDate: d.timestamp({ withTimezone: true }),
+}));
+
 export const users = createTable("user", (d) => ({
   id: d
     .varchar({ length: 255 })

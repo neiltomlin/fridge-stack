@@ -8,6 +8,7 @@ import {
   sessions,
   users,
   verificationTokens,
+  contents,
 } from "~/server/db/schema";
 
 /**

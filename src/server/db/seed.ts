@@ -3,7 +3,7 @@ import { db } from ".";
 import { users } from "./schema";
 
 async function seed() {
-  // Update a s  pecific user's field
+  // Update a specific user's field
   await db
     .update(users)
     .set({ isAdmin: true })
