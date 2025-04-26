@@ -1,6 +1,5 @@
-import { api } from '~/trpc/server';
-import { deleteFromFridge } from '../actions';
 import dayjs from 'dayjs';
+import { api } from '~/trpc/server';
 import { DeleteFromFridgeButton } from './deleteFromFridgeButton';
 
 export const FridgeContentsList = async () => {
