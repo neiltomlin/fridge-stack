@@ -13,10 +13,12 @@ export const addToFridge = async ({
   name,
   category,
   expiryDate,
+  quantity,
 }: {
   name: string;
   category: string;
   expiryDate: Date;
+  quantity: number;
 }) => {
   const session = await auth();
   if (!session?.user?.id) {
@@ -28,6 +30,7 @@ export const addToFridge = async ({
     category: category,
     addedById: session.user.id,
     expiryDate: expiryDate,
+    quantity: quantity,
   });
 };
 

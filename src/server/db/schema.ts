@@ -35,6 +35,7 @@ export const contents = createTable("content", (d) => ({
   id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
   name: d.varchar({ length: 256 }),
   category: d.varchar({ length: 256 }),
+  quantity: d.integer().default(1).notNull(),
   addedById: d
     .varchar({ length: 255 })
     .notNull()

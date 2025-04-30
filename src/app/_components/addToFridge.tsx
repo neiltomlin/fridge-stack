@@ -8,6 +8,7 @@ export const AddToFridge = () => {
   const [toAdd, setToAdd] = useState('');
   const [expiryDate, setExpiryDate] = useState('');
   const [category, setCategory] = useState<FridgeCategory>(FRIDGE_CATEGORIES[0]);
+  const [quantity, setQuantity] = useState(1);
 
   const router = useRouter();
 
@@ -18,9 +19,11 @@ export const AddToFridge = () => {
         name: toAdd,
         category: category,
         expiryDate: new Date(expiryDate),
+        quantity: quantity,
       });
       setToAdd('');
       setExpiryDate('');
+      setQuantity(1);
       router.refresh();
     } catch (error) {
       console.error('Failed to add item to fridge:', error);
@@ -37,6 +40,7 @@ export const AddToFridge = () => {
           onChange={(e) => setToAdd(e.target.value)}
           placeholder="Add item to fridge"
           className="border rounded px-2 py-1 [color-scheme:dark]"
+          required
         />
         <select
           value={category}
@@ -50,6 +54,14 @@ export const AddToFridge = () => {
             </option>
           ))}
         </select>
+        <input
+          type="number"
+          min="1"
+          value={quantity}
+          onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+          className="border rounded px-2 py-1 w-20 [color-scheme:dark]"
+          required
+        />
         <input
           type="date"
           value={expiryDate}

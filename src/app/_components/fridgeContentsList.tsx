@@ -3,14 +3,16 @@ import dayjs from 'dayjs';
 import { api } from '~/trpc/react';
 import { DeleteFromFridgeButton } from './deleteFromFridgeButton';
 import { CategoryBadge, ExpiryBadge } from './badges';
+import { QuantityBadge } from './quantityBadge';
 import type { FridgeCategory } from '../constants';
 import { FilterControls } from './filterControls';
 import { useState } from 'react';
 
 export const FridgeContentsList = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [sortBy, setSortBy] = useState<'name' | 'expiryDate' | 'category'>('name');
+  const [sortBy, setSortBy] = useState<'name' | 'expiryDate' | 'category' | 'quantity'>('name');
   const [showExpiring, setShowExpiring] = useState(false);
+  const [showLowStock, setShowLowStock] = useState(false);
 
   const { data: contents, isLoading } = api.contents.getAll.useQuery();
 
@@ -26,6 +28,9 @@ export const FridgeContentsList = () => {
       if (showExpiring && item.expiryDate) {
         return dayjs(item.expiryDate).isBefore(dayjs().add(3, 'day'), 'day');
       }
+      if (showLowStock) {
+        return (item.quantity ?? 0) <= 3;
+      }
       return true;
     })
     .sort((a, b) => {
@@ -34,6 +39,8 @@ export const FridgeContentsList = () => {
           return (a.name ?? '').localeCompare(b.name ?? '');
         case 'category':
           return (a.category ?? '').localeCompare(b.category ?? '');
+        case 'quantity':
+          return (a.quantity ?? 0) - (b.quantity ?? 0);
         case 'expiryDate':
           if (!a.expiryDate) return 1;
           if (!b.expiryDate) return -1;
@@ -47,9 +54,11 @@ export const FridgeContentsList = () => {
         selectedCategory={selectedCategory}
         sortBy={sortBy}
         showExpiring={showExpiring}
+        showLowStock={showLowStock}
         onCategoryChange={setSelectedCategory}
         onSortChange={setSortBy}
         onShowExpiringChange={setShowExpiring}
+        onShowLowStockChange={setShowLowStock}
       />
 
       <table className="w-full border-collapse">
@@ -57,6 +66,7 @@ export const FridgeContentsList = () => {
           <tr className="border-b text-left">
             <th className="py-2 px-4">Item</th>
             <th className="py-2 px-4">Category</th>
+            <th className="py-2 px-4">Quantity</th>
             <th className="py-2 px-4">Expires</th>
             <th className="py-2 px-4"></th>
           </tr>
@@ -67,6 +77,9 @@ export const FridgeContentsList = () => {
               <td className="py-2 px-4">{item.name}</td>
               <td className="py-2 px-4">
                 <CategoryBadge category={item.category as FridgeCategory | null} />
+              </td>
+              <td className="py-2 px-4">
+                <QuantityBadge quantity={item.quantity ?? 0} />
               </td>
               <td className="py-2 px-4">
                 <ExpiryBadge date={item.expiryDate ?? null} />
