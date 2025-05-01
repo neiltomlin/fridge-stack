@@ -25,8 +25,6 @@ export const FridgeContentsList = ({ contents, isLoading }: FridgeContentsListPr
   const [showExpiring, setShowExpiring] = useState(false);
   const [showLowStock, setShowLowStock] = useState(false);
 
-  // const { data: contents, isLoading, refetch } = api.contents.getAll.useQuery();
-
   if (isLoading || !contents) {
     return <div>Loading...</div>;
   }

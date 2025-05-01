@@ -1,7 +1,7 @@
 import { api, HydrateClient } from '~/trpc/server';
 import { auth } from '~/server/auth';
 import Image from 'next/image';
-import { MakeMeAdminButton } from '../_components/makeMeAdminButton';
+import { MakeMeAdminButton } from '../_components/adminControls';
 import { AddToFridge } from '../_components/addToFridge';
 import { FridgeContentsList } from '../_components/fridgeContentsList';
 

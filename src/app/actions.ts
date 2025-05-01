@@ -1,8 +1,9 @@
 'use server';
+import { eq } from 'drizzle-orm';
 import { auth } from '~/server/auth';
 import { contents, users } from '~/server/db/schema';
 import { db } from '~/server/db';
-import { eq } from 'drizzle-orm';
+import { seedContents } from '~/server/db/seed';
 import { type FridgeCategory } from './constants';
 
 export const makeMeAdmin = async ({ email }: { email: string }) => {
@@ -37,4 +38,24 @@ export const addToFridge = async ({
 
 export const deleteFromFridge = async ({ id }: { id: number }) => {
   await db.delete(contents).where(eq(contents.id, id));
+};
+
+export const seedFridge = async () => {
+  const session = await auth();
+  if (!session?.user?.id) {
+    throw new Error('Not authenticated');
+  }
+
+  // Check if user is admin
+  const user = await db.query.users.findFirst({
+    where: eq(users.id, session.user.id),
+  });
+
+  if (!user?.isAdmin) {
+    throw new Error('Only admins can seed the fridge');
+  }
+
+  // Use the seedContents function from our seed file
+  const itemsAdded = await seedContents();
+  return { success: true, message: `Seeded fridge with ${itemsAdded} items` };
 };
