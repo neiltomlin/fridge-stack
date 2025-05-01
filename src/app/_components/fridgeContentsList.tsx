@@ -1,6 +1,6 @@
 'use client';
 import dayjs from 'dayjs';
-import { api } from '~/trpc/react';
+// import { api } from '~/trpc/react';
 import { DeleteFromFridgeButton } from './deleteFromFridgeButton';
 import { CategoryBadge, ExpiryBadge } from './badges';
 import { QuantityBadge } from './quantityBadge';
@@ -8,13 +8,24 @@ import type { FridgeCategory } from '../constants';
 import { FilterControls } from './filterControls';
 import { useState } from 'react';
 
-export const FridgeContentsList = () => {
+type FridgeContentsListProps = {
+  contents: {
+    id: number;
+    name: string;
+    category: FridgeCategory | null;
+    quantity: number | null;
+    expiryDate: Date | null;
+  }[];
+  isLoading: boolean;
+};
+
+export const FridgeContentsList = ({ contents, isLoading }: FridgeContentsListProps) => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<'name' | 'expiryDate' | 'category' | 'quantity'>('name');
   const [showExpiring, setShowExpiring] = useState(false);
   const [showLowStock, setShowLowStock] = useState(false);
 
-  const { data: contents, isLoading } = api.contents.getAll.useQuery();
+  // const { data: contents, isLoading, refetch } = api.contents.getAll.useQuery();
 
   if (isLoading || !contents) {
     return <div>Loading...</div>;
@@ -76,7 +87,7 @@ export const FridgeContentsList = () => {
             <tr key={item.id} className="border-b hover:bg-gray-50">
               <td className="py-2 px-4">{item.name}</td>
               <td className="py-2 px-4">
-                <CategoryBadge category={item.category as FridgeCategory | null} />
+                <CategoryBadge category={item.category} />
               </td>
               <td className="py-2 px-4">
                 <QuantityBadge quantity={item.quantity ?? 0} />

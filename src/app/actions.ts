@@ -3,6 +3,7 @@ import { auth } from '~/server/auth';
 import { contents, users } from '~/server/db/schema';
 import { db } from '~/server/db';
 import { eq } from 'drizzle-orm';
+import { type FridgeCategory } from './constants';
 
 export const makeMeAdmin = async ({ email }: { email: string }) => {
   // Update a specific user's field
@@ -16,7 +17,7 @@ export const addToFridge = async ({
   quantity,
 }: {
   name: string;
-  category: string;
+  category: FridgeCategory;
   expiryDate: Date;
   quantity: number;
 }) => {

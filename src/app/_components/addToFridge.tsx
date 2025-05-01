@@ -6,7 +6,13 @@ import { FRIDGE_CATEGORIES, type FridgeCategory } from '../constants';
 
 export const AddToFridge = () => {
   const [toAdd, setToAdd] = useState('');
-  const [expiryDate, setExpiryDate] = useState('');
+  // Calculate date 1 week from now
+  const oneWeekFromNow = new Date();
+  oneWeekFromNow.setDate(oneWeekFromNow.getDate() + 7);
+  // Format as YYYY-MM-DD for date input
+  const formattedDate = oneWeekFromNow.toISOString().substring(0, 10);
+
+  const [expiryDate, setExpiryDate] = useState(formattedDate);
   const [category, setCategory] = useState<FridgeCategory>(FRIDGE_CATEGORIES[0]);
   const [quantity, setQuantity] = useState(1);
 
@@ -22,9 +28,9 @@ export const AddToFridge = () => {
         quantity: quantity,
       });
       setToAdd('');
-      setExpiryDate('');
+      setExpiryDate(formattedDate);
       setQuantity(1);
-      router.refresh();
+      // router.refresh();
     } catch (error) {
       console.error('Failed to add item to fridge:', error);
       // You might want to show an error message to the user here

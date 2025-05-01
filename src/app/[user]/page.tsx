@@ -10,9 +10,11 @@ const UserPage = async () => {
 
   const { name, email, image, isAdmin } = session?.user ?? {};
 
-  if (session?.user && api.post.getRecent) {
-    void api.post.getRecent.prefetch();
+  if (session?.user && api.contents.getAll) {
+    void api.contents.getAll.prefetch();
   }
+  // const { data: contents, isLoading, refetch } = api.contents.getAll.useQuery();
+  const contents = await api.contents.getAll();
 
   return (
     <HydrateClient>
@@ -20,7 +22,7 @@ const UserPage = async () => {
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
           <h1>{name}&apos;s Fridge</h1>
           <AddToFridge />
-          <FridgeContentsList />
+          <FridgeContentsList contents={contents} isLoading={!contents} />
         </div>
         <div className="mx-auto flex max-w-sm items-center gap-x-4 rounded-xl bg-white p-6 shadow-lg outline outline-black/5 dark:bg-slate-800 dark:shadow-none dark:-outline-offset-1 dark:outline-white/10">
           {image && (

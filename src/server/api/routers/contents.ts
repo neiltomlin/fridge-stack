@@ -1,7 +1,8 @@
-import { z } from "zod";
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
-import { contents } from "~/server/db/schema";
-import { eq } from "drizzle-orm";
+import { z } from 'zod';
+import { createTRPCRouter, protectedProcedure } from '~/server/api/trpc';
+import { contents } from '~/server/db/schema';
+import { eq } from 'drizzle-orm';
+import { FRIDGE_CATEGORIES } from '~/app/constants';
 
 export const contentsRouter = createTRPCRouter({
   getAll: protectedProcedure.query(async ({ ctx }) => {
@@ -11,7 +12,7 @@ export const contentsRouter = createTRPCRouter({
   }),
 
   getByCategory: protectedProcedure
-    .input(z.object({ category: z.string() }))
+    .input(z.object({ category: z.enum(FRIDGE_CATEGORIES) }))
     .query(async ({ ctx, input }) => {
       const contents = await ctx.db.query.contents.findMany({
         where: (contents, { eq }) => eq(contents.category, input.category),
@@ -24,9 +25,9 @@ export const contentsRouter = createTRPCRouter({
     .input(
       z.object({
         name: z.string(),
-        category: z.string(),
+        category: z.enum(FRIDGE_CATEGORIES),
         expiryDate: z.date().optional(),
-      }),
+      })
     )
     .mutation(async ({ ctx, input }) => {
       await ctx.db.insert(contents).values({

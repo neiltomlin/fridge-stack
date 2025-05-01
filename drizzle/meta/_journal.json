@@ -43,6 +43,13 @@
       "when": 1746048240081,
       "tag": "0005_normal_photon",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1746051489612,
+      "tag": "0006_smart_adam_warlock",
+      "breakpoints": true
     }
   ]
 }
