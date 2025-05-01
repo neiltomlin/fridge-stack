@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { MakeMeAdminButton } from '../_components/adminControls';
 import { AddToFridge } from '../_components/addToFridge';
 import { FridgeContentsList } from '../_components/fridgeContentsList';
+import { RecipeSuggestions } from '../_components/recipeSuggestions';
 
 const UserPage = async () => {
   const session = await auth();
@@ -23,6 +24,16 @@ const UserPage = async () => {
           <h1>{name}&apos;s Fridge</h1>
           <AddToFridge />
           <FridgeContentsList contents={contents} isLoading={!contents} />
+
+          {/* Add the recipe suggestions component */}
+          <div className="w-full">
+            <h2 className="text-2xl font-bold mb-4 text-center">Smart Recipe Suggestions</h2>
+            <p className="text-center mb-6 text-gray-300">
+              Our AI suggests recipes that prioritize ingredients expiring soon to help reduce food
+              waste.
+            </p>
+            {/* <RecipeSuggestions /> */}
+          </div>
         </div>
         <div className="mx-auto flex max-w-sm items-center gap-x-4 rounded-xl bg-white p-6 shadow-lg outline outline-black/5 dark:bg-slate-800 dark:shadow-none dark:-outline-offset-1 dark:outline-white/10">
           {image && (
