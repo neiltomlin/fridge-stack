@@ -15,7 +15,6 @@ export const AddToFridge = () => {
   const [expiryDate, setExpiryDate] = useState(formattedDate);
   const [category, setCategory] = useState<FridgeCategory>(FRIDGE_CATEGORIES[0]);
   const [quantity, setQuantity] = useState(1);
-
   const router = useRouter();
 
   const addToFridgeHandler = async (e: React.FormEvent) => {
@@ -30,7 +29,8 @@ export const AddToFridge = () => {
       setToAdd('');
       setExpiryDate(formattedDate);
       setQuantity(1);
-      // router.refresh();
+      // Refresh the UI to show the new item
+      router.refresh();
     } catch (error) {
       console.error('Failed to add item to fridge:', error);
       // You might want to show an error message to the user here
