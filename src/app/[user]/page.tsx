@@ -19,7 +19,7 @@ const UserPage = async () => {
 
   return (
     <HydrateClient>
-      <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#20028b] to-[#000000] text-white">
+      <main className="flex min-h-screen flex-col items-center justify-center dark:bg-gray-950 text-white">
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
           <h1>{name}&apos;s Fridge</h1>
           <RecipeSuggestions />
@@ -35,7 +35,7 @@ const UserPage = async () => {
             </p>
           </div>
         </div>
-        <div className="mx-auto flex max-w-sm items-center gap-x-4 rounded-xl bg-white p-6 shadow-lg outline outline-black/5 dark:bg-slate-800 dark:shadow-none dark:-outline-offset-1 dark:outline-white/10">
+        <div className="mx-auto flex max-w-sm items-center gap-x-4 rounded-md bg-white p-6 shadow-lg outline outline-black/5 dark:bg-slate-800 dark:shadow-none dark:-outline-offset-1 dark:outline-white/10">
           {image && (
             <Image alt="" src={image} width={100} height={100} className="size-12 shrink-0" />
           )}

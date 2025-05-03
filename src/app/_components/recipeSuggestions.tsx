@@ -23,17 +23,17 @@ export const RecipeSuggestions = () => {
   // Initial state when user hasn't requested suggestions yet
   if (!showSuggestions) {
     return (
-      <div className="mt-6 w-full max-w-2xl bg-white p-6 rounded-lg shadow-md text-center">
-        <h2 className="text-2xl font-bold mb-4 text-gray-900">Looking for Recipe Ideas?</h2>
-        <p className="mb-6 text-gray-700">
-          Get AI-powered recipe suggestions based on what&apos;s in your fridge, prioritizing
-          ingredients that will expire soon.
+      <div className="mt-6 w-full max-w-2xl dark:bg-slate-800 p-6 rounded-md shadow-md">
+        <h2 className="text-2xl font-bold mb-4 text-gray-100">Don&apos;t know what to eat?</h2>
+        <p className="mb-6 text-gray-200">
+          Get AI powered recipe suggestions based on your fridge, let&apos;s see if we can use up
+          some of that food before it goes off!
         </p>
         <button
           onClick={() => setShowSuggestions(true)}
-          className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium"
+          className="px-6 py-3 bg-linear-65 from-purple-500 to-pink-500 text-white rounded-md cursor-pointer font-medium border-solid border-gray-100 border-1 hover:border-transparent"
         >
-          Get Some Recipe Suggestions
+          Think for me
         </button>
       </div>
     );
@@ -41,7 +41,7 @@ export const RecipeSuggestions = () => {
 
   if (isLoading) {
     return (
-      <div className="mt-6 w-full max-w-2xl bg-white p-6 rounded-lg shadow-md">
+      <div className="mt-6 w-full max-w-2xl bg-white p-6 rounded-md shadow-md">
         <h2 className="text-2xl font-bold mb-4 text-gray-900">Loading recipe suggestions...</h2>
         <div className="animate-pulse h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
         <div className="animate-pulse h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
@@ -52,7 +52,7 @@ export const RecipeSuggestions = () => {
 
   if (error) {
     return (
-      <div className="mt-6 w-full max-w-2xl bg-white p-6 rounded-lg shadow-md">
+      <div className="mt-6 w-full max-w-2xl bg-white p-6 rounded-md shadow-md">
         <h2 className="text-2xl font-bold mb-4 text-red-600">Error loading recipes</h2>
         <p className="text-gray-900">
           There was an error loading recipe suggestions. Please try again later.
@@ -77,7 +77,7 @@ export const RecipeSuggestions = () => {
 
   if (!data?.recipes || data.recipes.length === 0) {
     return (
-      <div className="mt-6 w-full max-w-2xl bg-white p-6 rounded-lg shadow-md">
+      <div className="mt-6 w-full max-w-2xl bg-white p-6 rounded-md shadow-md">
         <h2 className="text-2xl font-bold mb-4 text-gray-900">No Recipe Suggestions</h2>
         <p className="text-gray-900">
           {data?.message ?? 'Could not generate any recipes from your fridge contents.'}
@@ -101,7 +101,7 @@ export const RecipeSuggestions = () => {
   }
 
   return (
-    <div className="mt-6 w-full max-w-2xl bg-white p-6 rounded-lg shadow-md">
+    <div className="mt-6 w-full max-w-2xl bg-white p-6 rounded-md shadow-md">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold text-gray-900">Recipe Suggestions</h2>
         <div className="flex gap-2">

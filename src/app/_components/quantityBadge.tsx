@@ -16,7 +16,9 @@ export const QuantityBadge = ({ quantity }: QuantityBadgeProps) => {
   };
 
   return (
-    <span className={`inline-block px-2 py-1 rounded-full text-sm ${getQuantityStyle()}`}>
+    <span
+      className={`inline-block px-2 py-1 rounded-md text-sm text-center ${getQuantityStyle()} w-full`}
+    >
       {quantity} {quantity === 1 ? 'item' : 'items'}
     </span>
   );

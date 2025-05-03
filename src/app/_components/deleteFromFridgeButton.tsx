@@ -9,8 +9,19 @@ export const DeleteFromFridgeButton = ({ id }: { id: number }) => {
     router.refresh();
   };
   return (
-    <button className="bg-red-500 px-2 py-1 rounded-xl" onClick={deleteClickHandler}>
-      Delete
-    </button>
+    <>
+      <button
+        className="bg-green-700 px-2 py-1 mr-2 rounded-md hover:bg-green-900 cursor-pointer border-solid border-gray-100 border-1 hover:border-transparent"
+        onClick={deleteClickHandler}
+      >
+        Used it 😁
+      </button>
+      <button
+        className="bg-red-700 px-2 py-1 rounded-md hover:bg-red-900 cursor-pointer border-solid border-gray-100 border-1 hover:border-transparent"
+        onClick={deleteClickHandler}
+      >
+        Threw it away 😖
+      </button>
+    </>
   );
 };

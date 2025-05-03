@@ -41,7 +41,7 @@ export const CategoryBadge = ({ category }: CategoryBadgeProps) => {
       : defaultCategoryColor;
 
   return (
-    <span className={`inline-block px-2 py-1 rounded-full text-sm ${colorClass}`}>
+    <span className={`inline-block px-2 py-1 rounded-md text-sm text-center ${colorClass} w-full`}>
       {displayText}
     </span>
   );
@@ -53,7 +53,9 @@ interface ExpiryBadgeProps {
 
 export const ExpiryBadge = ({ date }: ExpiryBadgeProps) => {
   if (!date) {
-    return <span className="inline-block px-2 py-1 rounded-full text-sm bg-gray-800">No date</span>;
+    return (
+      <span className="inline-block px-2 py-1 rounded-xs text-sm bg-gray-800 w-full">No date</span>
+    );
   }
 
   const getExpiryStyle = () => {
@@ -66,9 +68,29 @@ export const ExpiryBadge = ({ date }: ExpiryBadgeProps) => {
     return 'bg-green-100 text-green-800';
   };
 
+  // Calculate days remaining
+  const today = dayjs();
+  const expiryDate = dayjs(date);
+  const daysRemaining = expiryDate.diff(today, 'day');
+
+  // Format the expiry date as dd/mm
+  const formattedDate = expiryDate.format('DD/MM');
+
+  // Create display text with days remaining followed by date
+  let displayText = '';
+  if (daysRemaining < 0) {
+    displayText = `${Math.abs(daysRemaining)}d ago (${formattedDate})`;
+  } else if (daysRemaining === 0) {
+    displayText = `Today (${formattedDate})`;
+  } else {
+    displayText = `${daysRemaining}d left (${formattedDate})`;
+  }
+
   return (
-    <span className={`inline-block px-2 py-1 rounded-full text-sm ${getExpiryStyle()}`}>
-      {dayjs(date).format('D MMM')}
+    <span
+      className={`inline-block px-2 py-1 rounded-md text-sm text-center ${getExpiryStyle()} w-full`}
+    >
+      {displayText}
     </span>
   );
 };

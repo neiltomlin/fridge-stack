@@ -1,6 +1,5 @@
 'use client';
 import dayjs from 'dayjs';
-// import { api } from '~/trpc/react';
 import { DeleteFromFridgeButton } from './deleteFromFridgeButton';
 import { CategoryBadge, ExpiryBadge } from './badges';
 import { QuantityBadge } from './quantityBadge';
@@ -22,8 +21,21 @@ type FridgeContentsListProps = {
 export const FridgeContentsList = ({ contents, isLoading }: FridgeContentsListProps) => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<'name' | 'expiryDate' | 'category' | 'quantity'>('name');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [showExpiring, setShowExpiring] = useState(false);
   const [showLowStock, setShowLowStock] = useState(false);
+
+  // Function to handle column header clicks
+  const handleSortChange = (column: 'name' | 'expiryDate' | 'category' | 'quantity') => {
+    if (sortBy === column) {
+      // If already sorting by this column, toggle direction
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      // If sorting by a new column, set it and default to ascending
+      setSortBy(column);
+      setSortDirection('asc');
+    }
+  };
 
   if (isLoading || !contents) {
     return <div>Loading...</div>;
@@ -43,22 +55,23 @@ export const FridgeContentsList = ({ contents, isLoading }: FridgeContentsListPr
       return true;
     })
     .sort((a, b) => {
+      const directionMultiplier = sortDirection === 'asc' ? 1 : -1;
       switch (sortBy) {
         case 'name':
-          return (a.name ?? '').localeCompare(b.name ?? '');
+          return directionMultiplier * (a.name ?? '').localeCompare(b.name ?? '');
         case 'category':
-          return (a.category ?? '').localeCompare(b.category ?? '');
+          return directionMultiplier * (a.category ?? '').localeCompare(b.category ?? '');
         case 'quantity':
-          return (a.quantity ?? 0) - (b.quantity ?? 0);
+          return directionMultiplier * ((a.quantity ?? 0) - (b.quantity ?? 0));
         case 'expiryDate':
-          if (!a.expiryDate) return 1;
-          if (!b.expiryDate) return -1;
-          return dayjs(a.expiryDate).diff(dayjs(b.expiryDate));
+          if (!a.expiryDate) return 1 * directionMultiplier;
+          if (!b.expiryDate) return -1 * directionMultiplier;
+          return directionMultiplier * dayjs(a.expiryDate).diff(dayjs(b.expiryDate));
       }
     });
 
   return (
-    <div className="w-full max-w-2xl">
+    <div className="w-full max-w-4xl">
       <FilterControls
         selectedCategory={selectedCategory}
         sortBy={sortBy}
@@ -73,16 +86,36 @@ export const FridgeContentsList = ({ contents, isLoading }: FridgeContentsListPr
       <table className="w-full border-collapse">
         <thead>
           <tr className="border-b text-left">
-            <th className="py-2 px-4">Item</th>
-            <th className="py-2 px-4">Category</th>
-            <th className="py-2 px-4">Quantity</th>
-            <th className="py-2 px-4">Expires</th>
+            <th
+              className="py-2 px-4 cursor-pointer hover:bg-gray-300/20"
+              onClick={() => handleSortChange('name')}
+            >
+              Item {sortBy === 'name' && (sortDirection === 'asc' ? '↑' : '↓')}
+            </th>
+            <th
+              className="py-2 px-4 cursor-pointer hover:bg-gray-300/20"
+              onClick={() => handleSortChange('category')}
+            >
+              Category {sortBy === 'category' && (sortDirection === 'asc' ? '↑' : '↓')}
+            </th>
+            <th
+              className="py-2 px-4 cursor-pointer hover:bg-gray-300/20"
+              onClick={() => handleSortChange('quantity')}
+            >
+              Quantity {sortBy === 'quantity' && (sortDirection === 'asc' ? '↑' : '↓')}
+            </th>
+            <th
+              className="py-2 px-4 cursor-pointer hover:bg-gray-300/20"
+              onClick={() => handleSortChange('expiryDate')}
+            >
+              Expires {sortBy === 'expiryDate' && (sortDirection === 'asc' ? '↑' : '↓')}
+            </th>
             <th className="py-2 px-4"></th>
           </tr>
         </thead>
         <tbody>
           {filteredAndSortedContents.map((item) => (
-            <tr key={item.id} className="border-b hover:bg-gray-50">
+            <tr key={item.id} className="border-b">
               <td className="py-2 px-4">{item.name}</td>
               <td className="py-2 px-4">
                 <CategoryBadge category={item.category} />

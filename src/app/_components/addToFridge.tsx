@@ -45,17 +45,17 @@ export const AddToFridge = () => {
           value={toAdd}
           onChange={(e) => setToAdd(e.target.value)}
           placeholder="Add item to fridge"
-          className="border rounded px-2 py-1 [color-scheme:dark]"
+          className="border rounded px-2 py-1 text-gray-200 bg-gray-900"
           required
         />
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value as FridgeCategory)}
-          className="border rounded px-2 py-1 [color-scheme:dark]"
+          className="border rounded px-2 py-1 text-gray-200 bg-gray-900"
           required
         >
           {FRIDGE_CATEGORIES.map((cat) => (
-            <option key={cat} value={cat} className="[color-scheme:dark]">
+            <option key={cat} value={cat} className="text-gray-200 bg-gray-900">
               {cat.charAt(0).toUpperCase() + cat.slice(1)}
             </option>
           ))}
@@ -65,18 +65,21 @@ export const AddToFridge = () => {
           min="1"
           value={quantity}
           onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-          className="border rounded px-2 py-1 w-20 [color-scheme:dark]"
+          className="border rounded px-2 py-1 w-20 text-gray-200 bg-gray-900"
           required
         />
         <input
           type="date"
           value={expiryDate}
           onChange={(e) => setExpiryDate(e.target.value)}
-          className="border rounded px-2 py-1 [color-scheme:dark]"
+          className="border rounded px-2 py-1 text-gray-200 bg-gray-900 [color-scheme:dark]"
           required
         />
-        <button className="bg-green-500 px-2 py-1 rounded-xl text-white" type="submit">
-          Add
+        <button
+          className="bg-sky-700 px-4 py-2 rounded-md text-white cursor-pointer hover:bg-sky-900 border-solid border-gray-100 border-1 hover:border-transparent"
+          type="submit"
+        >
+          Add to my fridge
         </button>
       </form>
     </div>
