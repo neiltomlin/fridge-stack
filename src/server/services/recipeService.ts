@@ -3,11 +3,18 @@ import { env } from '~/env';
 import dayjs from 'dayjs';
 import type { FridgeCategory } from '~/app/constants';
 
+// Define ingredient type
+export type Ingredient = {
+  item: string;
+  quantity: string;
+  owned: boolean;
+};
+
 // Define OpenAI response structure
 interface OpenAIRecipeResponse {
   recipes: Array<{
     title: string;
-    ingredients: string[];
+    ingredients: Ingredient[];
     instructions: string[];
     description: string;
   }>;
@@ -15,7 +22,7 @@ interface OpenAIRecipeResponse {
 
 // Initialize OpenAI client with proper type assertion
 const openai = new OpenAI({
-  apiKey: env.OPENAI_API_KEY as string,
+  apiKey: env.OPENAI_API_KEY,
 });
 
 // Define the content type expected from the fridge
@@ -29,7 +36,7 @@ type FridgeContent = {
 
 export type RecipeSuggestion = {
   title: string;
-  ingredients: string[];
+  ingredients: Ingredient[];
   instructions: string[];
   usesExpiringItems: string[];
   description: string;
@@ -59,17 +66,7 @@ export async function generateRecipeSuggestions(
     (item) => item.expiryDate && dayjs(item.expiryDate).diff(today, 'day') <= 3
   );
 
-  // Prepare the content for OpenAI
-  const itemsList = sortedContents.map(
-    (item) =>
-      `${item.name} (Category: ${item.category}, Quantity: ${item.quantity ?? 1}, ${
-        item.expiryDate
-          ? `Expires: ${dayjs(item.expiryDate).format('YYYY-MM-DD')}${
-              dayjs(item.expiryDate).diff(today, 'day') <= 3 ? ' - EXPIRING SOON' : ''
-            }`
-          : 'No expiry date'
-      })`
-  );
+  const itemsList = sortedContents.map((item) => `${item.name}`);
 
   const expiringItemNames = expiringItems.map((item) => item.name);
 
@@ -79,13 +76,34 @@ export async function generateRecipeSuggestions(
       messages: [
         {
           role: 'system',
-          content: `You are a cooking assistant that helps reduce food waste. Your task is to suggest 2 recipes based on the items in a user's fridge, prioritizing ingredients that will expire soon. Format your response as a JSON object.`,
+          content: `Create recipes using the user's fridge ingredients to minimize food waste. Use only these ingredients for the first recipe; for the next, minimize missing items, for the third be open to adding unowned ingredients. Format as a JSON object:
+
+# Output Format
+
+\`\`\`typescript
+type OpenAIRecipeResponse = {
+  recipes: {
+    title: string;
+    ingredients: {
+      item: string;
+      quantity: string;
+      owned: boolean;
+    }[];
+    instructions: string[];
+    description: string;
+  }[];
+}
+\`\`\`
+
+Each recipe includes:
+- **Title**
+- **Ingredients**: Item, quantity (metric) and owned
+- **Instructions**
+- **Description**`,
         },
         {
           role: 'user',
-          content: `Here are the items in my fridge: ${itemsList.join(
-            '\n'
-          )}\n\nPlease suggest 2 different recipes that use as many of the ingredients as possible, especially the ones that will expire soon. Provide the title, ingredients with quantities, step-by-step instructions, and a brief description for each recipe. Return your response as a JSON object with a 'recipes' array.`,
+          content: `${itemsList.join(',')}`,
         },
       ],
       response_format: { type: 'json_object' },
@@ -98,26 +116,17 @@ export async function generateRecipeSuggestions(
 
     // Format the response to match our expected output type
     return (parsedData.recipes || []).map((recipe) => {
-      // Ensure recipe.ingredients is always an array
-      const ingredients = Array.isArray(recipe.ingredients) ? recipe.ingredients : [];
-
       // Check which expiring items are used in this recipe
       const usedExpiringItems = expiringItemNames.filter((item) => {
-        // Check each ingredient for the item name
-        for (const ingredient of ingredients) {
-          if (
-            typeof ingredient === 'string' &&
-            ingredient.toLowerCase().includes(item.toLowerCase())
-          ) {
-            return true;
-          }
-        }
-        return false;
+        // Check if any ingredient name includes this item
+        return recipe.ingredients.some((ingredient) =>
+          ingredient.item.toLowerCase().includes(item.toLowerCase())
+        );
       });
 
       return {
         title: recipe.title ?? '',
-        ingredients: Array.isArray(recipe.ingredients) ? recipe.ingredients : [],
+        ingredients: recipe.ingredients,
         instructions: Array.isArray(recipe.instructions) ? recipe.instructions : [],
         description: recipe.description ?? '',
         usesExpiringItems: usedExpiringItems,

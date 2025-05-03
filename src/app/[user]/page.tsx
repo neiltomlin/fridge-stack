@@ -22,6 +22,7 @@ const UserPage = async () => {
       <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#20028b] to-[#000000] text-white">
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
           <h1>{name}&apos;s Fridge</h1>
+          <RecipeSuggestions />
           <AddToFridge />
           <FridgeContentsList contents={contents} isLoading={!contents} />
 
@@ -32,7 +33,6 @@ const UserPage = async () => {
               Our AI suggests recipes that prioritize ingredients expiring soon to help reduce food
               waste.
             </p>
-            {/* <RecipeSuggestions /> */}
           </div>
         </div>
         <div className="mx-auto flex max-w-sm items-center gap-x-4 rounded-xl bg-white p-6 shadow-lg outline outline-black/5 dark:bg-slate-800 dark:shadow-none dark:-outline-offset-1 dark:outline-white/10">
