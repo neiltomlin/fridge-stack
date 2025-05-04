@@ -1,6 +1,7 @@
 import { api, HydrateClient } from '~/trpc/server';
 import { auth } from '~/server/auth';
 import Image from 'next/image';
+import Link from 'next/link';
 import { MakeMeAdminButton } from '../_components/adminControls';
 import { AddToFridge } from '../_components/addToFridge';
 import { FridgeContentsList } from '../_components/fridgeContentsList';
@@ -22,6 +23,17 @@ const UserPage = async () => {
       <main className="flex min-h-screen flex-col items-center justify-center dark:bg-gray-950 text-white">
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
           <h1>{name}&apos;s Fridge</h1>
+
+          {/* Navigation buttons */}
+          <div className="flex flex-wrap gap-4 justify-center">
+            <Link
+              href="/scan-receipt"
+              className="rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-3 font-semibold text-white shadow-lg hover:opacity-90 transition-all"
+            >
+              🧾 Scan Supermarket Receipt
+            </Link>
+          </div>
+
           <RecipeSuggestions />
           <AddToFridge />
           <FridgeContentsList contents={contents} isLoading={!contents} />
