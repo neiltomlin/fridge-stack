@@ -9,7 +9,7 @@ const UserPage = async () => {
   if (session?.user && api.contents.getAll) {
     void api.contents.getAll.prefetch();
   }
-  
+
   const contents = await api.contents.getAll();
 
   return (

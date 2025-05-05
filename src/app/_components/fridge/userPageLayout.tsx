@@ -37,7 +37,7 @@ export const UserPageLayout = ({
         <h1>{userName}&apos;s Fridge</h1>
 
         <NavigationButtons />
-        
+
         <RecipeSuggestions />
         <AddToFridge />
         <FridgeContentsList contents={fridgeContents} isLoading={isLoading} />
@@ -50,13 +50,8 @@ export const UserPageLayout = ({
           </p>
         </div>
       </div>
-      
-      <UserProfile 
-        name={userName} 
-        email={userEmail} 
-        image={userImage}
-        isAdmin={isAdmin}
-      />
+
+      <UserProfile name={userName} email={userEmail} image={userImage} isAdmin={isAdmin} />
     </main>
   );
 };
