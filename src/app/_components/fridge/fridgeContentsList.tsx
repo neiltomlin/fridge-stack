@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { DeleteFromFridgeButton } from './deleteFromFridgeButton';
 import { CategoryBadge, ExpiryBadge } from './badges';
 import { QuantityBadge } from './quantityBadge';
-import type { FridgeCategory } from '../constants';
+import type { FridgeCategory } from '../../constants';
 import { FilterControls } from './filterControls';
 import { useState } from 'react';
 

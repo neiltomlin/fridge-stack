@@ -1,5 +1,5 @@
 'use client';
-import { deleteFromFridge } from '../actions';
+import { deleteFromFridge } from '../../actions';
 import { useRouter } from 'next/navigation';
 
 export const DeleteFromFridgeButton = ({ id }: { id: number }) => {

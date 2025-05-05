@@ -1,5 +1,5 @@
 'use client';
-import { FRIDGE_CATEGORIES } from '../constants';
+import { FRIDGE_CATEGORIES } from '../../constants';
 
 interface FilterControlsProps {
   selectedCategory: string | null;

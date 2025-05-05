@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { type FridgeCategory } from '../constants';
+import { type FridgeCategory } from '../../constants';
 
 // Map each category to a unique color class
 const categoryColorMap: Record<FridgeCategory, string> = {

@@ -2,10 +2,10 @@ import { api, HydrateClient } from '~/trpc/server';
 import { auth } from '~/server/auth';
 import Image from 'next/image';
 import Link from 'next/link';
-import { MakeMeAdminButton } from '../_components/adminControls';
-import { AddToFridge } from '../_components/addToFridge';
-import { FridgeContentsList } from '../_components/fridgeContentsList';
-import { RecipeSuggestions } from '../_components/recipeSuggestions';
+import { MakeMeAdminButton } from '../_components/adminControls/adminControls';
+import { AddToFridge } from '../_components/fridge/addToFridge';
+import { FridgeContentsList } from '../_components/fridge/fridgeContentsList';
+import { RecipeSuggestions } from '../_components/fridge/recipeSuggestions';
 
 const UserPage = async () => {
   const session = await auth();

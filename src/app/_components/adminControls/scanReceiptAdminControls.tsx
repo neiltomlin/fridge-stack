@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { type OpenAIReceiptResponse } from '../actions';
+import { type OpenAIReceiptResponse } from '../../actions';
 import { useSession } from 'next-auth/react';
 
 interface ScanReceiptAdminControlsProps {

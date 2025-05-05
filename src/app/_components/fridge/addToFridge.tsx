@@ -1,8 +1,8 @@
 'use client';
 import { useState } from 'react';
-import { addToFridge } from '../actions';
+import { addToFridge } from '../../actions';
 import { useRouter } from 'next/navigation';
-import { FRIDGE_CATEGORIES, type FridgeCategory } from '../constants';
+import { FRIDGE_CATEGORIES, type FridgeCategory } from '../../constants';
 
 export const AddToFridge = () => {
   const [toAdd, setToAdd] = useState('');
