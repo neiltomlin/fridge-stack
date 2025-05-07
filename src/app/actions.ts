@@ -67,6 +67,18 @@ export const deleteFromFridge = async ({ id }: { id: number }) => {
   await db.delete(contents).where(eq(contents.id, id));
 };
 
+export const emptyFridge = async () => {
+  const session = await auth();
+  if (!session?.user?.id) {
+    throw new Error('Not authenticated');
+  }
+
+  // Delete all contents belonging to the current user
+  await db.delete(contents).where(eq(contents.addedById, session.user.id));
+
+  return { success: true, message: 'All items have been removed from your fridge.' };
+};
+
 export const seedFridge = async () => {
   const session = await auth();
   if (!session?.user?.id) {

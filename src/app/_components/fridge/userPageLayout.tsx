@@ -4,6 +4,7 @@ import { UserProfile } from './userProfile';
 import { RecipeSuggestions } from './recipeSuggestions';
 import { AddToFridge } from './addToFridge';
 import { FridgeContentsList } from './fridgeContentsList';
+import { EmptyFridgeButton } from './emptyFridgeButton';
 import type { FridgeCategory } from '../../constants';
 
 type FridgeItem = {
@@ -41,14 +42,7 @@ export const UserPageLayout = ({
         <RecipeSuggestions />
         <AddToFridge />
         <FridgeContentsList contents={fridgeContents} isLoading={isLoading} />
-
-        <div className="w-full">
-          <h2 className="text-2xl font-bold mb-4 text-center">Smart Recipe Suggestions</h2>
-          <p className="text-center mb-6 text-gray-300">
-            Our AI suggests recipes that prioritize ingredients expiring soon to help reduce food
-            waste.
-          </p>
-        </div>
+        <EmptyFridgeButton />
       </div>
 
       <UserProfile name={userName} email={userEmail} image={userImage} isAdmin={isAdmin} />
