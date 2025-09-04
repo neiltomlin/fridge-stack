@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { api } from '~/trpc/react';
+import { useRouter } from 'next/navigation';
 import type { Ingredient } from '~/server/services/recipeService';
 
 type RecipeSuggestion = {
@@ -12,13 +13,61 @@ type RecipeSuggestion = {
 };
 
 export const RecipeSuggestions = () => {
+  const router = useRouter();
   const [selectedRecipe, setSelectedRecipe] = useState<number | null>(null);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [savedRecipeIndices, setSavedRecipeIndices] = useState<Set<number>>(new Set());
+  const [savedMessage, setSavedMessage] = useState<string | null>(null);
 
   const { data, isLoading, error, refetch } = api.recipes.getSuggestions.useQuery(undefined, {
     refetchOnWindowFocus: false,
     enabled: showSuggestions,
   });
+
+  const saveRecipeMutation = api.recipes.saveRecipe.useMutation({
+    onSuccess: (result, variables) => {
+      // Find the recipe that was just saved in our current recipes list
+      if (data?.recipes) {
+        const savedIndex = data.recipes.findIndex((r) => r.title === variables.title);
+        if (savedIndex >= 0) {
+          setSavedRecipeIndices((prev) => {
+            const newSet = new Set(prev);
+            newSet.add(savedIndex);
+            return newSet;
+          });
+        }
+      }
+
+      // Show success message
+      setSavedMessage(`"${variables.title}" has been saved to your recipes!`);
+
+      // Clear message after a few seconds
+      setTimeout(() => {
+        setSavedMessage(null);
+      }, 3000);
+    },
+    onError: (error) => {
+      console.error('Error saving recipe:', error);
+      setSavedMessage(`Error: ${error.message}`);
+      setTimeout(() => setSavedMessage(null), 3000);
+    },
+  });
+
+  const handleSaveRecipe = (recipe: RecipeSuggestion, index: number) => {
+    if (savedRecipeIndices.has(index)) {
+      // Already saved, navigate to saved recipes
+      router.push('/saved-recipes');
+      return;
+    }
+
+    saveRecipeMutation.mutate({
+      title: recipe.title,
+      description: recipe.description,
+      ingredients: recipe.ingredients,
+      instructions: recipe.instructions,
+      usesExpiringItems: recipe.usesExpiringItems,
+    });
+  };
 
   // Initial state when user hasn't requested suggestions yet
   if (!showSuggestions) {
@@ -178,11 +227,33 @@ export const RecipeSuggestions = () => {
                     </li>
                   ))}
                 </ol>
+
+                <div className="mt-4 flex justify-end">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSaveRecipe(recipe, index);
+                    }}
+                    className={`px-4 py-2 text-white rounded ${
+                      savedRecipeIndices.has(index)
+                        ? 'bg-blue-500 hover:bg-blue-600'
+                        : 'bg-green-500 hover:bg-green-600'
+                    }`}
+                  >
+                    {savedRecipeIndices.has(index) ? 'View Saved Recipes' : 'Save Recipe'}
+                  </button>
+                </div>
               </div>
             )}
           </div>
         ))}
       </div>
+
+      {savedMessage && (
+        <div className="fixed top-4 right-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded shadow-md z-50">
+          <p>{savedMessage}</p>
+        </div>
+      )}
     </div>
   );
 };

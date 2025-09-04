@@ -116,3 +116,27 @@ export const verificationTokens = createTable(
   }),
   (t) => [primaryKey({ columns: [t.identifier, t.token] })]
 );
+
+export const savedRecipes = createTable('saved_recipe', (d) => ({
+  id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
+  title: d.varchar({ length: 256 }).notNull(),
+  description: d.text().notNull(),
+  ingredients: d.json().notNull().$type<Ingredient[]>(),
+  instructions: d.json().notNull().$type<string[]>(),
+  usesExpiringItems: d.json().$type<string[]>(),
+  savedById: d
+    .varchar({ length: 255 })
+    .notNull()
+    .references(() => users.id),
+  savedAt: d.timestamp({ withTimezone: true }).default(new Date()).notNull(),
+}));
+
+export const savedRecipesRelations = relations(savedRecipes, ({ one }) => ({
+  user: one(users, { fields: [savedRecipes.savedById], references: [users.id] }),
+}));
+
+export type Ingredient = {
+  item: string;
+  quantity: string;
+  owned: boolean;
+};

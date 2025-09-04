@@ -14,6 +14,14 @@ export const NavigationButtons = ({ className = '' }: NavigationButtonsProps) =>
       >
         🧾 Scan Supermarket Receipt
       </Link>
+
+      <Link
+        href="/saved-recipes"
+        className="rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500 px-6 py-3 font-semibold text-white shadow-lg hover:opacity-90 transition-all"
+      >
+        📋 Saved Recipes
+      </Link>
+
       {/* Additional navigation buttons can be added here */}
     </div>
   );
